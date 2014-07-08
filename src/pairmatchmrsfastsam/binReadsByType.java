@@ -120,6 +120,9 @@ public class binReadsByType {
                                 // Maxdist
                                 addToDiscords(fwd, rev, callEnum.MAXDIST, span, hasPerfectConcordant);
                             }else if(span < this.lower){
+                                /*
+                                TODO: I need to add eversion checking here!
+                                */
                                 if(fwd.orient != rev.orient){
                                     //Insertion
                                     addToDiscords(fwd, rev, callEnum.INSERTION, span, hasPerfectConcordant);
