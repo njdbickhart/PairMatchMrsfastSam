@@ -120,10 +120,10 @@ public class binReadsByType {
                                 // Maxdist
                                 addToDiscords(fwd, rev, callEnum.MAXDIST, span, hasPerfectConcordant);
                             }else if(span < this.lower){
-                                /*
-                                TODO: I need to add eversion checking here!
-                                */
-                                if(fwd.orient != rev.orient){
+                                if(isEverted(fwd, rev))
+                                    // Eversion
+                                    addToDiscords(fwd, rev, callEnum.EVERSION, span, hasPerfectConcordant);
+                                else if(fwd.orient != rev.orient){
                                     //Insertion
                                     addToDiscords(fwd, rev, callEnum.INSERTION, span, hasPerfectConcordant);
                                 }else if(fwd.orient == rev.orient){
@@ -145,14 +145,9 @@ public class binReadsByType {
                                 if (fwd.orient == rev.orient){
                                     // Inversion
                                     addToDiscords(fwd, rev, callEnum.INVERSION, span, hasPerfectConcordant);
-                                }else if(((fwd.orient == '+' &&  rev.orient == '-')) 
-                                    && (fwd.chrStart > rev.chrStart)){
-                                    // Eversion one
+                                }else if(isEverted(fwd, rev)){
+                                    // Eversion
                                     addToDiscords(fwd, rev, callEnum.EVERSION, span, hasPerfectConcordant);                                
-                                }else if (fwd.orient == '-' && rev.orient == '+' 
-                                        && rev.chrStart > fwd.chrStart){
-                                    // Eversion two
-                                    addToDiscords(fwd, rev, callEnum.EVERSION, span, hasPerfectConcordant);
                                 }else{
                                     // Concordant
                                     matches.add(new matches(fwd, rev, fwd.eddis + rev.eddis));
@@ -170,6 +165,13 @@ public class binReadsByType {
         }
         
         return matches;   
+    }
+    private boolean isEverted(hits fwd, hits rev){
+        if(fwd.chrStart < rev.chrStart){
+            return fwd.orient == '-' && rev.orient == '+';
+        }else{
+            return fwd.orient == '+' && rev.orient == '-';
+        }
     }
     public ArrayList<discords> returnDiscords(){
         return this.discords;
